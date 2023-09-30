@@ -36,6 +36,17 @@ jobs:
         run: |
           aws sts get-caller-identity
 
+      - name: Setup Profile
+        run: |
+          aws configure set region ${{ env.AWS_REGION }} --profile django
+          aws configure set aws_access_key_id ${{ env.AWS_ACCESS_KEY_ID }} --profile django
+          aws configure set aws_secret_access_key ${{ env.AWS_SECRET_ACCESS_KEY }} --profile django
+          aws configure set aws_session_token ${{ env.AWS_SESSION_TOKEN }} --profile django
+
+      - name: Show profile
+        run: |
+          cat ~/.aws/config
+
       - uses: actions/checkout@v3
 
       - name: Set up Python 3.8
