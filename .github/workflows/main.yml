@@ -10,11 +10,32 @@ on:
       - Pipfile*
       - zappa_settings.json
 
+env:
+  AWS_REGION:
+    "eu-west-2" #Change to reflect your Region
+
+
+    # Permission can be added at job level or workflow level
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: arn:aws:iam::984617344736:oidc-provider/token.actions.githubusercontent.com #change to reflect your IAM role’s ARN
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ env.AWS_REGION }}
+      # Hello from AWS: WhoAmI
+      - name: Sts GetCallerIdentity
+        run: |
+          aws sts get-caller-identity
+
       - uses: actions/checkout@v3
 
       - name: Set up Python 3.8
@@ -37,13 +58,6 @@ jobs:
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: pipenv install
-
-      - name: Configure AWS profile
-        run: |
-          pipenv run aws configure set region eu-west-2 --profile default
-          pipenv run aws configure set output json --profile default
-          pipenv run aws configure set aws_access_key_id ${{ secrets.PRIMARY_AWS_ACCESS_KEY_ID }} --profile default
-          pipenv run aws configure set aws_secret_access_key ${{ secrets.PRIMARY_AWS_SECRET_ACCESS_KEY }} --profile default
 
       - name: Zappa deployments
         run: pipenv run zappa update --all
