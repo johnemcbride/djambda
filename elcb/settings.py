@@ -57,7 +57,7 @@ ROOT_URLCONF = 'elcb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates"),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,6 +125,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 # STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 STORAGES = {
     "staticfiles": {
@@ -138,7 +141,7 @@ STORAGES = {
 S3_BUCKET = "zappa-tx06u5g94"
 STATIC_URL = "https://%s.s3.amazonaws.com/" % S3_BUCKET
 STATIC_ROOT = "https://%s.s3.amazonaws.com/" % S3_BUCKET
-# AWS_DEFAULT_ACL = None
+AWS_DEFAULT_ACL = None
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

@@ -2,11 +2,11 @@ from django.contrib import admin
 
 from django.db import models
 from django import forms
-from .models import Band,    BandPackage
+from .models import ProductPackage, Term, TermProductPackagePrice, Product, ProductCategory
 
 
-class BandPackageAdmin(admin.ModelAdmin):
-    model = BandPackage
+class ProductPackageAdmin(admin.StackedInline):
+    model = ProductPackage
     list_display = ["name"]
     extra = 0
     formfield_overrides = {
@@ -15,8 +15,8 @@ class BandPackageAdmin(admin.ModelAdmin):
     }
 
 
-class BandAdmin(admin.ModelAdmin):
-    model = Band
+class ProductAdmin(admin.StackedInline):
+    model = Product
     extra = 0
     fieldsets = [
         (None, {"fields": ["name"]}),
@@ -28,5 +28,23 @@ class BandAdmin(admin.ModelAdmin):
     }
 
 
-admin.site.register(Band, BandAdmin)
-admin.site.register(BandPackage, BandPackageAdmin)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    model = ProductCategory
+    extra = 1
+    inlines = [ProductAdmin, ProductPackageAdmin]
+
+
+class TermPriceInline(admin.TabularInline):
+    model = TermProductPackagePrice
+    extra = 0
+
+
+class TermAdmin(admin.ModelAdmin):
+    model = Term
+    extra = 1
+    inlines = [TermPriceInline]
+    fields = ["name", ("start_date", "end_date")]
+
+
+admin.site.register(ProductCategory, ProductCategoryAdmin)
+admin.site.register(Term, TermAdmin)
