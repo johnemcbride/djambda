@@ -34,7 +34,7 @@ class ProductCategoryAdmin(admin.ModelAdmin):
     inlines = [ProductAdmin, ProductPackageAdmin]
 
 
-class TermPriceInline(admin.TabularInline):
+class TermPriceInline(admin.StackedInline):
     model = TermProductPackagePrice
     extra = 0
 
@@ -44,6 +44,7 @@ class TermAdmin(admin.ModelAdmin):
     extra = 1
     inlines = [TermPriceInline]
     fields = ["name", ("start_date", "end_date")]
+    save_as = True
 
 
 admin.site.register(ProductCategory, ProductCategoryAdmin)

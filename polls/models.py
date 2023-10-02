@@ -28,7 +28,7 @@ class Product(models.Model):
 
 class Term(models.Model):
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=20, unique=True)
     start_date = models.DateField()
     end_date = models.DateField()
 
