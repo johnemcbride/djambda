@@ -70,5 +70,7 @@ jobs:
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: pipenv install
 
+      - name: Move sqllite binary in place
+        run: mv bla/* .
       - name: Zappa deployments
         run: pipenv run zappa update --all
