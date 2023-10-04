@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.contrib import admin
 
@@ -38,12 +39,17 @@ class Term(models.Model):
 
 class ProductPackage(models.Model):
     name = models.CharField(max_length=200)
-    products = models.ManyToManyField(Product, blank=True)
     product_category = models.ForeignKey(
-        ProductCategory, on_delete=models.CASCADE)
+        ProductCategory, on_delete=models.CASCADE, related_name='product_category')
+
+    products = models.ManyToManyField(
+        Product, blank=True)
 
     def __str__(self):
         return self.name
+
+    def cat(self):
+        return self.product_category
 
 
 class TermProductPackagePrice(models.Model):
