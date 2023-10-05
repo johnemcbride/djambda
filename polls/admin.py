@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from django.db import models
 from django import forms
-from .models import ProductPackage, Term, TermProductPackagePrice, Product, ProductCategory
+from .models import ProductPackage, Term, TermProductPackagePrice, Product, ProductCategory, Member
 
 
 import logging
@@ -37,17 +37,7 @@ logging.config.dictConfig(LOGGING)
 class ProductPackageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProductPackageForm, self).__init__(*args, **kwargs)
-        logging.info('--')
-        logging.info(kwargs)
-        
-
         if 'instance' in kwargs:
-       
-        # logging.info(Product.objects.filter(
-        #     product_category=self.instance.product_category.id))
-        # # self.fields['products'].queryset = Product.objects.filter(
-        #     product_category_id=self.instance.product_category.id)
-      
             self.fields['products'].queryset = Product.objects.filter(
                 product_category_id=self.instance.product_category.id)
         
@@ -96,7 +86,7 @@ class ProductCategoryAdmin(admin.ModelAdmin):
     inlines = [ProductAdmin, ProductPackageAdmin]
 
 
-class TermPriceInline(admin.StackedInline):
+class TermPriceInline(admin.TabularInline):
     model = TermProductPackagePrice
     extra = 0
 
@@ -111,3 +101,4 @@ class TermAdmin(admin.ModelAdmin):
 
 admin.site.register(ProductCategory, ProductCategoryAdmin)
 admin.site.register(Term, TermAdmin)
+admin.site.register(Member)

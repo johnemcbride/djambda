@@ -63,3 +63,37 @@ class TermProductPackagePrice(models.Model):
 
     def __str__(self):
         return ''
+
+class Member(models.Model):
+
+    class MemberType(models.TextChoices):
+        SIBLING = "SIBLING"
+        UNDER30 = "UNDER30"
+        FULL = "FULL"
+    
+    class Gender(models.TextChoices):
+        MALE = "MALE"
+        FEMALE = "FEMALE"
+        PREFERNOTSAY = "PREFERNOTSAY"
+        OTHER = "OTHER"
+
+
+    username = models.CharField(max_length=200)
+    email = models.EmailField()
+    forename = models.CharField(max_length=200)
+    surname = models.CharField(max_length=200)
+    siblings = models.BooleanField()
+    profile = models.CharField(
+        max_length=200,
+        choices=MemberType.choices
+    )
+    date_of_birth = models.DateField()
+    gender = models.CharField(
+        max_length=200,
+        choices=Gender.choices
+    )
+    ethnicity = models.CharField(max_length=200)
+    payment_holiday = models.BooleanField()
+
+
+
